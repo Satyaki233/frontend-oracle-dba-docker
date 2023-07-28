@@ -1,7 +1,10 @@
-package com.project.Backend;
+package com.project.Backend.POJO;
+
+import java.util.UUID;
 
 public class User {
     
+    String id;
     String name;
     String phone;
     String password;
@@ -9,8 +12,9 @@ public class User {
     String address;
 
 
-    public User( String name, String phone, String password, String email, String address) {
-        
+    public User(String id, String name, String phone, String password, String email, String address) {
+
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.password = password;
@@ -18,7 +22,13 @@ public class User {
         this.address = address;
     }
 
+    public String getId() {
+        return this.id;
+    }
 
+    public void setId(String id) {
+        this.id =   UUID.randomUUID().toString();;
+    }
   
 
     public String getName() {
