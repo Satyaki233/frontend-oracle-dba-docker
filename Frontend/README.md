@@ -6,7 +6,7 @@
     `python -m venv venv`  
     it will craete a venv folder
 2. step 2:  
-    for linux shell : `$ source <venv>/bin/activate`  
+    for linux shell : `$ source venv/bin/activate`  
     deactivate : `$ deactivate`
     your virtual envirnment is ready to roll
 3. step 3:  
