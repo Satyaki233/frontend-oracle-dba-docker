@@ -13,7 +13,7 @@ import java.sql.Statement;
 
 public class DatabaseConnection {
 	
-	private static String JDBC_DRIVER   = "com.mysql.jdbc.Driver";
+	private static String JDBC_DRIVER   = "com.mysql.cj.jdbc.Driver";
 	private static String JDBC_URL      = "jdbc:mysql://localhost:3306/satyaki"; 
     private static String JDBC_USER     = "root";
     private static String JDBC_PASSWORD = "root";
@@ -29,8 +29,8 @@ public class DatabaseConnection {
 				Class jdbcDriverClass = Class.forName(JDBC_DRIVER);
 				driver = (Driver) jdbcDriverClass.newInstance();
 				DriverManager.registerDriver(driver);
-				 con=DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-				 con.setAutoCommit(true);
+				con=DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+				con.setAutoCommit(false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -22,12 +22,18 @@ public class User {
         this.address = address;
     }
 
+
+    public User() {
+        
+    }
+
+
     public String getId() {
         return this.id;
     }
 
     public void setId(String id) {
-        this.id =   UUID.randomUUID().toString();;
+        this.id =   id;
     }
   
 

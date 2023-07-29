@@ -1,17 +1,27 @@
 package com.project.Backend.POJO;
 
 public class Login {
+    String id;
     String email;
     String password;
 
 
-    public Login(String email, String password) {
+    public Login(String email, String password,String id) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }
 
     public Login() {
         
+    }
+
+    public String getId(){
+        return this.id;
+    }
+
+    public void setId(String id){
+        this.id = id;
     }
 
 
