@@ -1,58 +1,120 @@
-from flask import Flask,render_template,jsonify,url_for,redirect,request
+from flask import Flask,render_template,jsonify,url_for,redirect,request,session
+import json
 import re
 app =Flask(__name__)
 import requests
+app.secret_key="login"
 
 
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+
 
 @app.route('/success')
 def success():
     return render_template('ok.html')
 
 
+#main project work start from  here
+
+@app.route('/rcciitfest')
+def home():
+    
+    
+    return render_template('home.html')
 
 
+@app.route('/login')
+def show_login_page():
+    return render_template('login.html')
 
-@app.route('/login',methods=['POST'])
-def get_loginvalue():
-    name=request.form['username']
-    password=request.form['password']
-    if re.match('[a-z|A-Z]',name)==None:
-        print("kfjdkf")
-        return render_template('login.html',item_name='ooo lovely')
+@app.route('/login', methods=['POST'])
+def show_login():
+    name = request.form['username']
+    phoneno = request.form['phoneno']
+    logindata={"name":name,"phoneNumber":phoneno}
+    print(logindata)
+    
+    res = requests.post('http://localhost:8080/members/login', json=logindata)
+    data=json.loads(res.text)
+    print(data)
+    value=data["data"]
+    if  value !=None and value[0]['name']== name and value[0]['phoneNumber']== phoneno:
+        session["username"]= name
+        session["phoneno"] = phoneno
+        return redirect(url_for('show_participent_page'))
+
     else:
-        loginjasondata={'name':name,'password':password}
-    
-    
-        res = requests.post('http://localhost:8080/logindata', json=loginjasondata)
-        print(res.text)
-        return redirect(url_for('success'))
+        session["username"] =""
+        session["phoneno"] = ""
+        print("djjfdj",session["username"])
+        return render_template('login.html')
 
 
-    
+
+
 
 
 @app.route('/register')
-def hellow_register():
+def show_register_page():
     return render_template('register.html',item_name='ooo lovely')
+
+
+
+
+    
+    
+    
+    
+   
+
 @app.route('/register',methods=['POST'])
 def get_valueFromRagisterPage():
     name = request.form['name']
     email = request.form['email']
-    password=request.form['password']
     phone=request.form['phone']
-    address=request.form['address']
-    registerjasondata={"name":name,"email":email,'password':password,'phone':phone,'address':address};
-    res = requests.post('http://localhost:8080/user', json=registerjasondata)
-    print(res.text)
-    p=dict(res.text)
-    print(type(p))
-    print(p)
-    return redirect(url_for('success'))
+    rolevalue=request.form['menu']
+    role=None
+    if rolevalue=='1':
+        role='VOLUNTEER';
+    elif rolevalue=='2':
+        role='PARTICIPANTS'
+    elif rolevalue=='3':
+        role='AUDIENCE'
+
+    
+    registerjasondata={"name":name,'email':email,'phoneNumber':phone,'role':role};
+    print(registerjasondata)
+    res = requests.post('http://localhost:8080/members/register', json=registerjasondata)
+     
+    return redirect(url_for('show_login_page'))
+
+
+@app.route('/participent')
+def show_participent_page():
+    if  session["username"] !="" and session["phoneno"] != "":
+        headings=("id","name","email","phoneno","role")
+        res=requests.get('http://localhost:8080/members/all')
+        data=json.loads(res.text)
+        value=data["data"]
+        print(value)
+        return render_template('participent.html',headings=headings,data=value)
+    else:
+        return redirect(url_for('home'))
+
+    
+
+@app.route('/logout')
+def logout_function():
+    session["username"] =""
+    session["phoneno"]  = ""
+    return redirect(url_for('home'))
+
+
+    
+
+
+
+
 
 if __name__ == "__main__":
     app.run()
