@@ -98,6 +98,9 @@
     <div class="container">
         <h2>College Login</h2>
         <form name="loginForm"   method="post">
+            <p style="color:red">
+              {{value}}  
+            </p>
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="name" name="username" required>
@@ -108,7 +111,7 @@
                 <input type="text" id="password" name="phoneno" required>
             </div>
 
-            <input type="submit" value="Sign Up">
+            <input type="submit" value="Sign In">
             <div class="row justify-content-center">
                 <div class="col-9 mt-2">
                     <p>If you want to register<a href="\register"> click here </a></p>

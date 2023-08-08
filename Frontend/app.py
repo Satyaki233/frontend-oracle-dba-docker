@@ -16,10 +16,9 @@ def success():
 
 #main project work start from  here
 
+@app.route('/')
 @app.route('/rcciitfest')
 def home():
-    
-    
     return render_template('home.html')
 
 
@@ -46,26 +45,14 @@ def show_login():
     else:
         session["username"] =""
         session["phoneno"] = ""
-        print("djjfdj",session["username"])
-        return render_template('login.html')
-
-
-
-
-
+        print("User not found",session["username"])
+        return render_template('login.html',value="Not Found")
 
 @app.route('/register')
 def show_register_page():
-    return render_template('register.html',item_name='ooo lovely')
+    return render_template('register.html')
 
 
-
-
-    
-    
-    
-    
-   
 
 @app.route('/register',methods=['POST'])
 def get_valueFromRagisterPage():
@@ -75,17 +62,22 @@ def get_valueFromRagisterPage():
     rolevalue=request.form['menu']
     role=None
     if rolevalue=='1':
-        role='VOLUNTEER';
+        role='VOLUNTEER'
     elif rolevalue=='2':
         role='PARTICIPANTS'
     elif rolevalue=='3':
         role='AUDIENCE'
 
     
-    registerjasondata={"name":name,'email':email,'phoneNumber':phone,'role':role};
+    registerjasondata={"name":name,'email':email,'phoneNumber':phone,'role':role}
     print(registerjasondata)
     res = requests.post('http://localhost:8080/members/register', json=registerjasondata)
-     
+    data=json.loads(res.text)
+    print(data)
+    value=data["data"]
+    if value==None:
+        return render_template('register.html',value="Insert proper value")
+
     return redirect(url_for('show_login_page'))
 
 
@@ -99,7 +91,7 @@ def show_participent_page():
         print(value)
         return render_template('participent.html',headings=headings,data=value)
     else:
-        return redirect(url_for('home'))
+        return redirect(url_for('show_login'))
 
     
 
