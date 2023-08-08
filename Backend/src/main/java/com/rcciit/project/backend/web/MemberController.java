@@ -23,7 +23,7 @@ public class MemberController {
     @GetMapping("/all")
     public ResponseEntity<Object> getMembers(){
     	System.out.println("kk");
-        return memberService.getAllMembers();
+        return memberService.getMemberByRole("ALL");
     }
 
     
@@ -51,17 +51,17 @@ public class MemberController {
 //
     @GetMapping("/participants")
     public ResponseEntity<Object> getParticipants(){
-       return memberService.getParticipants();
+       return memberService.getMemberByRole("PARTICIPANTS");
     }
 //
     @GetMapping("/volunteer")
     public ResponseEntity<Object> getVolunteer(){
-        return memberService.getVolunteer();
+        return memberService.getMemberByRole("VOLUNTEER");
     }
 
     @GetMapping("/audience")
     public ResponseEntity<Object> getAudience(){
-        return  memberService.getAudience();
+        return  memberService.getMemberByRole("AUDIENCE");
     }
 
 

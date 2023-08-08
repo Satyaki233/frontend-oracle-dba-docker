@@ -58,12 +58,12 @@ public class MemberService {
 
     }
 
-    //TODO : get List of all members
-    public ResponseEntity<Object> getAllMembers(){
+    //TODO : Get member by role
+    public ResponseEntity<Object> getMemberByRole(String role){
         List<Member> result = null;
         ResponseEntity<Object> re = null;
         try{
-            result = memberRepository.getAllMember();
+            result = memberRepository.getMemberByRole(role);
             if(result.size() != 0){
                 re = ResponseHandler.generateResponse(HttpStatus.OK,true,"Members found",result);
             }else{
@@ -78,62 +78,5 @@ public class MemberService {
         return re;
     }
 
-    public ResponseEntity<Object> getVolunteer(){
-        List<Member> result = null;
-        ResponseEntity<Object> re = null;
-        try{
-            result = memberRepository.getVolunteer();
-            if(result.size() != 0){
-                re = ResponseHandler.generateResponse(HttpStatus.OK,true,"Members found",result);
-            }else{
-                re = ResponseHandler.generateResponse(HttpStatus.OK,true,"Empty List",null) ;
-            }
-        }catch (SQLException e){
-            re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,false,e.toString(),null);
-        }catch(Exception e){
-            re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,false,"Some Exception",null) ;
-        }
 
-        return re;
-    }
-
-    public ResponseEntity<Object> getParticipants(){
-        List<Member> result = null;
-        ResponseEntity<Object> re = null;
-        try{
-            result = memberRepository.getParticipants();
-            if(result.size() != 0){
-                re = ResponseHandler.generateResponse(HttpStatus.OK,true,"Members found",result);
-            }else{
-                re = ResponseHandler.generateResponse(HttpStatus.OK,true,"Empty List",null) ;
-
-            }
-        }catch (SQLException e){
-            re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,false,e.toString(),null);
-        }catch(Exception e){
-            re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,false,"Some Exception",null) ;
-        }
-        return re;
-    }
-
-
-
-    public ResponseEntity<Object> getAudience() {
-        int result = 0;
-        ResponseEntity<Object> re = null;
-        try{
-            result = memberRepository.getAudinece();
-            if(result != 0){
-                re = ResponseHandler.generateResponse(HttpStatus.OK,true,"Members found",result);
-            }else{
-                re = ResponseHandler.generateResponse(HttpStatus.OK,true,"No one is registered",null) ;
-
-            }
-        }catch (SQLException e){
-            re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,false,e.toString(),null);
-        }catch(Exception e){
-            re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,false,"Some Exception",null) ;
-        }
-        return re;
-    }
 }

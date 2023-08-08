@@ -33,12 +33,6 @@ public class DatabaseConnection {
         return ds;
     }
 
-
-
-
-
-
-
     private static Driver driver = null;
 
 
@@ -52,7 +46,25 @@ public class DatabaseConnection {
             driver = (Driver) jdbcDriverClass.newInstance();
             DriverManager.registerDriver(driver);
             con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-            con.setAutoCommit(false);
+            System.out.println("Connection established......");
+            //Creating the DatabaseMetaData object
+            DatabaseMetaData dbMetadata = con.getMetaData();
+            //invoke the supportsBatchUpdates() method.
+            boolean bool = dbMetadata.supportsBatchUpdates();
+            if(bool) {
+                System.out.println("Underlying database supports batch updates");
+            } else {
+                System.out.println("Underlying database doesn’t support batch updates");
+            }
+            //Retrieving the driver name
+            System.out.println("Driver name: "+dbMetadata.getDriverName());
+            //Retrieving the driver version
+            System.out.println("Database version: "+dbMetadata.getDriverVersion());
+            //Retrieving the user name
+            System.out.println("User name: "+dbMetadata.getUserName());
+            //Retrieving the URL
+            System.out.println("URL for this database: "+dbMetadata.getURL());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,80 +73,63 @@ public class DatabaseConnection {
 
     }
 
-    public static void close(PreparedStatement stmt) throws Exception{
-        try {
+    public static boolean checkTable(String tableName) throws SQLException {
 
-            if (stmt != null){
-                stmt.close();
+        String query = "show tables";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if(rs.getString(1).equals(tableName)) return true;
             }
 
-        } catch (SQLException e) {
-            throw new Exception(e);
+        } catch (Exception e) {
+            System.out.println("Some exception");
+        } finally {
+            if(rs!=null){rs.close();}
+            if(ps!=null){ps.close();}
+            if(con!=null){con.close();}
         }
-
-
+        return false;
     }
-    /*
-     * close the ResultSet
-     *
-     */
-    public static void close(ResultSet rs) throws Exception{
+
+    public static  void createTable(String tableName) throws SQLException {
+        String query = "create table members("+
+                "id varchar(10) NOT NULL,"+
+                "name varchar(30) NOT NULL,"+
+                "email varchar(50) NOT NULL,"+
+                "phone_number varchar(12) NOT NULL,"+
+                "role varchar(10) NOT NULL,"+
+                "primary key(id),"+
+                "unique(email,phone_number),"+
+                "constraint chk_role check(role in('VOLUNTEER','PARTICIPANTS','AUDIENCE'))"+
+                ")";
+        Connection con = null;
+        PreparedStatement ps = null;
 
         try {
+            con = getConnection();
+            ps = con.prepareStatement(query);
+            int i = ps.executeUpdate();
 
-            if (rs != null)
-                rs.close();
 
-        } catch (SQLException e) {
-            throw new Exception(e);
+            System.out.println(tableName + " is created !");
+
+
+
+        } catch (Exception e) {
+            System.out.println("Some exception");
+        } finally {
+
+            if(ps != null) ps.close();
+            if(con != null) con.close();
         }
     }
-    /*
-     * close the Statement
-     *
-     */
-    public static void close(Statement stmt) throws Exception{
-        try {
-
-            if (stmt != null){
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            throw new Exception(e);
-        }
-
-    }
-    /*
-     * used for rollback
-     *
-     */
-    public static void rollBack(Connection conn) throws Exception  {
-
-        try {if (conn != null){
-            conn.rollback();
-        }
-        } catch (SQLException e) {
-            throw new Exception(e);
 
 
-        }
-    }
-    /*
-     *  commit the connection
-     *
-     */
-    public static void commit(Connection conn) throws Exception {
-
-        try {
-
-            if (conn != null) {
-                conn.commit();
-            }
-        } catch (SQLException e) {
-            throw new Exception(e);
-        }
-
-
-    }
 
 }

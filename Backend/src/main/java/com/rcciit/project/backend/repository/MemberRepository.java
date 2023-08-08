@@ -31,7 +31,7 @@ public class MemberRepository {
             if(i>0){
             	System.out.println(i);
                 System.out.println("member inserted !");
-                DatabaseConnection.commit(con);
+
                 return member;
             }
 
@@ -89,96 +89,23 @@ public class MemberRepository {
         }
         return membersList;
     }
- 
-    
-    
-    
-    
-    
-    
-    
-    
-
-    public List<Member> getAllMember() throws SQLException{
-        List<Member> membersList = new ArrayList<>();
-        String query = "select * from members order by role";
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseConnection.getConnection();
-            ps = con.prepareStatement(query);
-            rs = ps.executeQuery();
-            
-            while(rs.next()){
-                Member mbr = new Member();
-                mbr.setId(rs.getString("id"));
-                mbr.setName(rs.getString("name"));
-                mbr.setEmail(rs.getString("email"));
-                mbr.setPhoneNumber(rs.getString("phone_number"));
-                mbr.setRole(rs.getString("role"));
-
-                membersList.add(mbr);
-            }
 
 
-
-        } catch (Exception e) {
-            throw new SQLException("message");
-        } finally {
-            rs.close();
-            ps.close();
-            con.close();
+    public List<Member> getMemberByRole(String role) throws SQLException{
+        String query = null;
+        if(!role.equalsIgnoreCase("ALL")) {
+            query = "select * from members where role='"+role+"'";
         }
 
-        return membersList;
-    }
+        query = "select * from members";
 
-    public List<Member> getVolunteer() throws SQLException{
         List<Member> membersList = new ArrayList<>();
-        String query = "select * from members where role='VOLUNTEER'";
+
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            int i =this.getTableSizeByRole("VOLUNTEER");
-            if(i==0) return membersList;
-            con = DatabaseConnection.getConnection();
-            ps = con.prepareStatement(query);
-            rs = ps.executeQuery();
-
-            while(rs.next()){
-                Member mbr = new Member();
-                mbr.setId(rs.getString("id"));
-                mbr.setName(rs.getString("name"));
-                mbr.setEmail(rs.getString("email"));
-                mbr.setPhoneNumber(rs.getString("phone_number"));
-                mbr.setRole(rs.getString("role"));
-
-                membersList.add(mbr);
-            }
-
-
-
-        } catch (Exception e) {
-            throw new SQLException("message");
-        } finally {
-            if(rs!=null){rs.close();}
-            if(ps!=null){ps.close();}
-            if(con!=null){con.close();}
-        }
-
-        return membersList;
-    }
-
-    public List<Member> getParticipants() throws SQLException{
-        List<Member> membersList = new ArrayList<>();
-        String query = "select * from members where role='PARTICIPANTS'";
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            int i =this.getTableSizeByRole("PARTICIPANTS");
+            int i =this.getTableSizeByRole(role);
             if(i==0) return membersList;
             con = DatabaseConnection.getConnection();
             ps = con.prepareStatement(query);
@@ -206,8 +133,16 @@ public class MemberRepository {
     }
 
 
+
     public int getTableSizeByRole(String role) throws Exception{
-        String query = "select count(*) as count from members where role='"+role+"'";
+        String query = null;
+        if(role.equals("ALL")){
+            query = "select count(*) as count from members";
+        }
+        else{
+            query = "select count(*) as count from members where role='"+role+"'";
+        }
+
         int i=0;
         Connection con = null;
         PreparedStatement ps = null;
