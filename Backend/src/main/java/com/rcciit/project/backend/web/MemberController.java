@@ -32,10 +32,10 @@ public class MemberController {
     
     
     @PostMapping("/login")
-    public ResponseEntity<Object> ValidateloginValue(@RequestBody Member member) {
+    public ResponseEntity<Object> validateLoginValue(@RequestBody Member member) {
     	
     	 ResponseEntity<Object> re=  memberService.getValidateUser(member);
-    	 System.out.println(re);
+
     	 if (re==null) {
     		 re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,true,"User Not Registerd",null);
     		 

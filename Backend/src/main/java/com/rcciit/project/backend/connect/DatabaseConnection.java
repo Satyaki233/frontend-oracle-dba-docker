@@ -63,27 +63,7 @@ public class DatabaseConnection {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            System.out.println("Connection established......");
-
             con = getConnection();
-            //Creating the DatabaseMetaData object
-            DatabaseMetaData dbMetadata = con.getMetaData();
-            //invoke the supportsBatchUpdates() method.
-            boolean bool = dbMetadata.supportsBatchUpdates();
-            if(bool) {
-                System.out.println("Underlying database supports batch updates");
-            } else {
-                System.out.println("Underlying database doesn’t support batch updates");
-            }
-            //Retrieving the driver name
-            System.out.println("Driver name: "+dbMetadata.getDriverName());
-            //Retrieving the driver version
-            System.out.println("Database version: "+dbMetadata.getDriverVersion());
-            //Retrieving the user name
-            System.out.println("User name: "+dbMetadata.getUserName());
-            //Retrieving the URL
-            System.out.println("URL for this database: "+dbMetadata.getURL());
-
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -104,11 +84,11 @@ public class DatabaseConnection {
         String query = "create table members("+
                 "id varchar(10) NOT NULL,"+
                 "name varchar(30) NOT NULL,"+
-                "email varchar(50) NOT NULL,"+
-                "phone_number varchar(12) NOT NULL,"+
+                "email varchar(100) NOT NULL,"+
+                "phone_number varchar(20) NOT NULL,"+
                 "role varchar(10) NOT NULL,"+
                 "primary key(id),"+
-                "unique(email,phone_number),"+
+                "unique(phone_number),"+
                 "constraint chk_role check(role in('VOLUNTEER','PARTICIPANTS','AUDIENCE'))"+
                 ")";
         Connection con = null;
@@ -116,6 +96,22 @@ public class DatabaseConnection {
 
         try {
             con = getConnection();
+            DatabaseMetaData dbMetadata = con.getMetaData();
+            //invoke the supportsBatchUpdates() method.
+            boolean bool = dbMetadata.supportsBatchUpdates();
+            if(bool) {
+                System.out.println("Underlying database supports batch updates");
+            } else {
+                System.out.println("Underlying database doesn’t support batch updates");
+            }
+            //Retrieving the driver name
+            System.out.println("Driver name: "+dbMetadata.getDriverName());
+            //Retrieving the driver version
+            System.out.println("Database version: "+dbMetadata.getDriverVersion());
+            //Retrieving the user name
+            System.out.println("User name: "+dbMetadata.getUserName());
+            //Retrieving the URL
+            System.out.println("URL for this database: "+dbMetadata.getURL());
             ps = con.prepareStatement(query);
             int i = ps.executeUpdate();
 
@@ -131,6 +127,8 @@ public class DatabaseConnection {
             if(ps != null) ps.close();
             if(con != null) con.close();
         }
+
+
     }
 
 

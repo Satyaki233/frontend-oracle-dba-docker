@@ -29,7 +29,7 @@ public class MemberRepository {
             int i = ps.executeUpdate();
             System.out.println(i);
             if(i>0){
-            	System.out.println(i);
+
                 System.out.println("member inserted !");
 
                 return member;
@@ -40,8 +40,8 @@ public class MemberRepository {
             throw new SQLException("message");
         } finally {
 
-            ps.close();
-            con.close();
+            if(ps != null)ps.close();
+            if(con != null)con.close();
         }
         return new Member();
     }
@@ -83,9 +83,8 @@ public class MemberRepository {
         	System.out.println(e);
             throw new SQLException("message");
         } finally {
-
-            ps.close();
-            con.close();
+            if(ps != null)ps.close();
+            if(con != null)con.close();
         }
         return membersList;
     }
@@ -95,9 +94,11 @@ public class MemberRepository {
         String query = null;
         if(!role.equalsIgnoreCase("ALL")) {
             query = "select * from members where role='"+role+"'";
+        }else{
+            query = "select * from members order by role";
         }
 
-        query = "select * from members";
+
 
         List<Member> membersList = new ArrayList<>();
 

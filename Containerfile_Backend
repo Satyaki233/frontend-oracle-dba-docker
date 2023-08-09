@@ -1,0 +1,8 @@
+FROM docker.io/library/maven:latest
+RUN mkdir -p /app/Backend
+COPY Backend/ /app/Backend/
+WORKDIR /app/Backend
+RUN mvn -f pom.xml clean package
+EXPOSE 8080
+ENTRYPOINT ["java"]
+CMD ["-jar","/app/Backend/target/Backend-0.0.1-SNAPSHOT.jar"]
