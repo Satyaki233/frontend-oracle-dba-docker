@@ -2,6 +2,7 @@ package com.rcciit.project.backend.web;
 
 
 import com.rcciit.project.backend.POJO.Member;
+import com.rcciit.project.backend.connect.DatabaseConnection;
 import com.rcciit.project.backend.service.MemberService;
 import com.rcciit.project.backend.service.ResponseHandler;
 
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.Random;
 
 @RestController
@@ -22,7 +24,7 @@ public class MemberController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> getMembers(){
-    	System.out.println("kk");
+
         return memberService.getMemberByRole("ALL");
     }
 
@@ -62,6 +64,20 @@ public class MemberController {
     @GetMapping("/audience")
     public ResponseEntity<Object> getAudience(){
         return  memberService.getMemberByRole("AUDIENCE");
+    }
+
+    @GetMapping("/create")
+    public ResponseEntity<String> configureDatabase() throws SQLException {
+        String tableName = "members";
+        boolean isTableCreated = DatabaseConnection.checkTable(tableName);
+
+        if(! isTableCreated) {
+            DatabaseConnection.createTable(tableName);
+        }else{
+            System.out.println(tableName + " is already there ! ");
+        }
+
+        return new ResponseEntity<>("Database configuring ......",HttpStatus.OK);
     }
 
 

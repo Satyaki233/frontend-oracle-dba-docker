@@ -1,8 +1,12 @@
 from flask import Flask,render_template,jsonify,url_for,redirect,request,session
 import json
 import re
+import configparser
 app =Flask(__name__)
 import requests
+parser = configparser.ConfigParser()
+configFilePath = r'./config/app.config'
+parser.read(configFilePath)
 app.secret_key="login"
 
 
@@ -31,9 +35,8 @@ def show_login():
     name = request.form['username']
     phoneno = request.form['phoneno']
     logindata={"name":name,"phoneNumber":phoneno}
-    print(logindata)
-    
-    res = requests.post('http://localhost:8080/members/login', json=logindata)
+    print(logindata)    
+    res = requests.post("http://"+parser['app-api']['host']+":"+parser['app-api']['port']+"/members/login", json=logindata)
     data=json.loads(res.text)
     print(data)
     value=data["data"]
@@ -71,7 +74,7 @@ def get_valueFromRagisterPage():
     
     registerjasondata={"name":name,'email':email,'phoneNumber':phone,'role':role}
     print(registerjasondata)
-    res = requests.post('http://localhost:8080/members/register', json=registerjasondata)
+    res = requests.post("http://"+parser['app-api']['host']+":"+parser['app-api']['port']+"/members/register", json=registerjasondata)
     data=json.loads(res.text)
     print(data)
     value=data["data"]
@@ -85,7 +88,7 @@ def get_valueFromRagisterPage():
 def show_participent_page():
     if  session["username"] !="" and session["phoneno"] != "":
         headings=("id","name","email","phoneno","role")
-        res=requests.get('http://localhost:8080/members/all')
+        res=requests.get("http://"+parser['app-api']['host']+":"+parser['app-api']['port']+"/members/all")
         data=json.loads(res.text)
         value=data["data"]
         print(value)
@@ -102,11 +105,5 @@ def logout_function():
     return redirect(url_for('home'))
 
 
-    
-
-
-
-
-
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0',port=parser['app-gui']['port'])

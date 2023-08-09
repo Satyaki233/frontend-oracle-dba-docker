@@ -46,7 +46,26 @@ public class DatabaseConnection {
             driver = (Driver) jdbcDriverClass.newInstance();
             DriverManager.registerDriver(driver);
             con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return con;
+
+    }
+
+    public static boolean checkTable(String tableName) throws SQLException {
+
+        String query = "show tables";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
             System.out.println("Connection established......");
+
+            con = getConnection();
             //Creating the DatabaseMetaData object
             DatabaseMetaData dbMetadata = con.getMetaData();
             //invoke the supportsBatchUpdates() method.
@@ -65,22 +84,6 @@ public class DatabaseConnection {
             //Retrieving the URL
             System.out.println("URL for this database: "+dbMetadata.getURL());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return con;
-
-    }
-
-    public static boolean checkTable(String tableName) throws SQLException {
-
-        String query = "show tables";
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            con = getConnection();
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {

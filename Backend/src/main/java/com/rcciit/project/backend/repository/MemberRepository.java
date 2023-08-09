@@ -50,7 +50,7 @@ public class MemberRepository {
     //for cheack the login value
     public List<Member> loginMember(Member member) throws SQLException {
     	List<Member> membersList = new ArrayList<>();
-    	System.out.print(member.getPhoneNumber());
+
 
     	String query = "select * from members where name=? and phone_number=?";
     	
@@ -73,7 +73,7 @@ public class MemberRepository {
                 mbr.setEmail(rs.getString("email"));
                 mbr.setPhoneNumber(rs.getString("phone_number"));
                 mbr.setRole(rs.getString("role"));
-                System.out.println("klj");
+
                 membersList.add(mbr);
             }
 

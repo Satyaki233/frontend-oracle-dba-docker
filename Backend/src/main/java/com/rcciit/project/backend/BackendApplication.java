@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.sql.SQLException;
 
 @SpringBootApplication
-public class BackendApplication implements CommandLineRunner {
+public class BackendApplication{
 
 
 	public static void main(String[] args) {
@@ -17,17 +17,4 @@ public class BackendApplication implements CommandLineRunner {
 
 	}
 
-
-	@Override
-	public void run(String... args) throws SQLException {
-		String tableName = "members";
-		boolean isTableCreated = DatabaseConnection.checkTable(tableName);
-
-		if(! isTableCreated) {
-			DatabaseConnection.createTable(tableName);
-		}else{
-			System.out.println(tableName + " is already there ! ");
-		}
-
-	}
 }

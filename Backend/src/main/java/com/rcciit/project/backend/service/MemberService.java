@@ -35,7 +35,7 @@ public class MemberService {
         } catch (SQLException e) {
         	re = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,false,e.toString(),null) ;
         }
-        System.out.println("not working");
+
         return re;
 
     }
