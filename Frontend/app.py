@@ -43,7 +43,7 @@ def show_login():
     if  value !=None and value[0]['name']== name and value[0]['phoneNumber']== phoneno:
         session["username"]= name
         session["phoneno"] = phoneno
-        return redirect(url_for('show_participent_page'))
+        return redirect(url_for('show_members_page'))
 
     else:
         session["username"] =""
@@ -70,6 +70,7 @@ def get_valueFromRagisterPage():
         role='PARTICIPANTS'
     elif rolevalue=='3':
         role='AUDIENCE'
+    
 
     
     registerjasondata={"name":name,'email':email,'phoneNumber':phone,'role':role}
@@ -84,15 +85,15 @@ def get_valueFromRagisterPage():
     return redirect(url_for('show_login_page'))
 
 
-@app.route('/participent')
-def show_participent_page():
+@app.route('/members')
+def show_members_page():
     if  session["username"] !="" and session["phoneno"] != "":
         headings=("id","name","email","phoneno","role")
         res=requests.get("http://"+parser['app-api']['host']+":"+parser['app-api']['port']+"/members/all")
         data=json.loads(res.text)
         value=data["data"]
         print(value)
-        return render_template('participent.html',headings=headings,data=value)
+        return render_template('members.html',headings=headings,data=value)
     else:
         return redirect(url_for('show_login'))
 
