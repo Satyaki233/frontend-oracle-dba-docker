@@ -86,7 +86,7 @@ public class DatabaseConnection {
                 "name varchar(30) NOT NULL,"+
                 "email varchar(100) NOT NULL,"+
                 "phone_number varchar(20) NOT NULL,"+
-                "role varchar(10) NOT NULL,"+
+                "role varchar(20) NOT NULL,"+
                 "primary key(id),"+
                 "unique(phone_number),"+
                 "constraint chk_role check(role in('VOLUNTEER','PARTICIPANTS','AUDIENCE'))"+
